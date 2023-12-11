@@ -65,10 +65,6 @@ public class Player : MonoBehaviour
             rb.AddForce(Vector2.up * jumph, ForceMode2D.Impulse);
             isGrounded = false;
         }
-        if (mc == 9)
-        {
-            panel2.SetActive(true);
-        }
 
         {
             if (player.transform.position.y < -5.3)
@@ -113,12 +109,14 @@ public class Player : MonoBehaviour
         {
             panel.SetActive(true);
             Destroy(gameObject);
+            enabled = false;
 
 
         }
         if (other.gameObject.tag == "finish")
         {
             panel2.SetActive(true);
+            enabled = false;
         }
         
     }

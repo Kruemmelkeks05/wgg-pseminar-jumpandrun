@@ -1,7 +1,7 @@
 using UnityEngine; 
 using System.Collections;
 using System.Security.Cryptography.X509Certificates;
-
+using System.Diagnostics;
 
 [RequireComponent(typeof(SpriteRenderer))]
 public class player : MonoBehaviour {
@@ -18,12 +18,15 @@ public class player : MonoBehaviour {
 
     public GameManager gm;
     public GameObject et;
+
+    private Animator anim;
                                         
 private void Awake (){
     //startet das Spiel u. spawnt den Frosch und speichert die Spawn Position
     spriteRenderer = GetComponent<SpriteRenderer>(); 
     spawnPosition = transform.position;
     gm = FindObjectOfType<GameManager>();
+        anim = GetComponent<Animator>();
     
 }
 
@@ -108,8 +111,8 @@ private IEnumerator Leap (Vector3 destination)
         float duration = 0.125f;
 
         // startet die Animation und setzt den Cooldown für den Sprung auf "true"
-        spriteRenderer.sprite = leapSprite;
         cooldown = true;
+        anim.SetBool("Leaping", true);
         //während die Bewegung nicht zuende ist, bewegt er sich auf das Ziel zu  
         while (elapsed < duration)
         { 
@@ -121,7 +124,7 @@ private IEnumerator Leap (Vector3 destination)
 
         // Animation wird zu Idle zurückgesetzt, eine neue Position wird festgelegt und der Cooldown wird resetet
         transform.position = destination;
-        spriteRenderer.sprite = idleSprite;
+        anim.SetBool("Leaping", false);
         cooldown = false;
     }
 
@@ -143,7 +146,8 @@ private IEnumerator Leap (Vector3 destination)
     //gibt die Kontrolle wieder frei
     gameObject.SetActive(true);
     enabled = true;
-    cooldown = false; }
+    cooldown = false;    
+    }
 
 public void Death ()
 {
@@ -155,10 +159,10 @@ enabled = false;
 
 //Wechselt zur "tot" Animation und setzt die Rotation auf null => Frosch schaut nach oben
 transform.rotation=Quaternion.identity;
-spriteRenderer.sprite = deadSprite; 
+anim.SetBool("Dead", true);
 
 //ruft im GameManager eine Methode auf, um die "Game Over Phase" zu starten
-    gm.Died();
+gm.Died();
 }
 
 private void OnTriggerEnter2D (Collider2D other) 
@@ -175,8 +179,10 @@ private void OnTriggerEnter2D (Collider2D other)
   if (endlessTrigger == true)
         {
             gm.Endless();
+            gm.deleteTrigger(other);
         }
         
 
   }
-} 
+}
+

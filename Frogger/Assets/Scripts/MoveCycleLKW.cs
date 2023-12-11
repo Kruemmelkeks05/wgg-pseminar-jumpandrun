@@ -21,11 +21,13 @@ public class MoveCycleLKW : MonoBehaviour
         if (direction.x > 0 && (transform.position.x - size) > rightEdge.x)
         {
             transform.position = new Vector3(leftEdge.x - size, transform.position.y, transform.position.z);
+
         }
         // Prüft, ob das Objekt über den linken Rand des Bildschrirms weg ist und teleportiert es in diesem Fall nach rechts
         else if (direction.x < 0 && (transform.position.x + size) < leftEdge.x)
         {
             transform.position = new Vector3(rightEdge.x + size, transform.position.y, transform.position.z);
+           
         }
         // Bewegt das Objekt, wenn es sich auf dem Bildschirm befindet
         else

@@ -20,5 +20,6 @@ public class ButtonManager : MonoBehaviour
     public void restart ()
     {
         SceneManager.LoadScene("MainScene");
+        enabled = true;
     }
 }

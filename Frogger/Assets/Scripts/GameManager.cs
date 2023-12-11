@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Specialized;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -43,7 +44,8 @@ public class GameManager : MonoBehaviour
 
   //starten des Spiels
   private void Start(){
-    NewGame();
+     tilemaps = new GameObject[100];
+     NewGame();     
     //InvokeRepeating("checkScore", 0, 1.0f);
   }
   
@@ -74,14 +76,19 @@ public class GameManager : MonoBehaviour
 
   //aktivieren des neuen Spiels
   public void NewGame(){
+        for (int i = 3; i <= counter; i++)
+        {
+            Destroy(tilemaps[i]);
+            Debug.Log("Tilemap deleted");
+        }
     gameOverMenu.SetActive(false);
     SetScore(0);
     counter = 1;
     player.Respawn();
-        tilemaps = new GameObject[100];
-
+     
+      
   }
-  
+    
   
   //respawnen des Frosches
   private void Respawn()
@@ -89,7 +96,9 @@ public class GameManager : MonoBehaviour
         player.Respawn();
 
         StopAllCoroutines();
-        
+
+       
+
     }
 
  
@@ -142,17 +151,29 @@ public class GameManager : MonoBehaviour
         scoreText.text = score.ToString();
     }
 
-    public void Endless ()
+    public void Endless()
     {
-       GameObject oberLay = Instantiate(Tilemap, new Vector3(-15, 17 + 14 * counter, 0), Quaternion.identity);
-       counter++;
-       oberLay.transform.SetParent(Tilemap.transform.parent);
-       tilemaps[counter] = oberLay;
-        if (counter>2)
+        GameObject oberLay = Instantiate(Tilemap, new Vector3(-15, 17 + 14 * counter, 0), Quaternion.identity);
+        counter++;
+        oberLay.transform.SetParent(Tilemap.transform.parent);
+        tilemaps[counter] = oberLay;
+        Debug.Log("addedTilemap to array");
+        if (counter > 2)
         {
-            Destroy(tilemaps[counter-3]);
+            Destroy(tilemaps[counter - 3]);
         }
-    }
+
+    }   
+        
+  public void deleteTrigger (Collider2D go) 
+  {
+      if (counter > 2)       
+            {
+                Destroy(go);
+            }
+  }
+
+    
 
     
     
